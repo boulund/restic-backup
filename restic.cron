@@ -1,0 +1,4 @@
+# Cronfile for running Restic to backup Monolith
+# Place in /etc/cron.d/restic.cron
+# Fredrik Boulund 2021
+15 4 * * * root /root/monolith-restic/restic_backup.sh
