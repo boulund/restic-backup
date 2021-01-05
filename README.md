@@ -76,6 +76,9 @@ install the cronjob by copying `restic.cron` to `/etc/cron.d/restic.cron`.
 
 
 # Restoring files
-Refer to the official docs on how to restore files:
+Run `mount_repo.sh` to mount the remote B2 repo as a file system under `/mnt/restic`.
+
+For more info on how to restore files, refer to the official docs:
 https://restic.readthedocs.io/en/stable/050_restore.html
+
 
