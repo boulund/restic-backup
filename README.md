@@ -39,8 +39,13 @@ restic 0.11.0 compiled with go1.15.3 on linux/amd64
 ```
 
 ### Backup repo initialization
-1. Create a file with Backblaze account ID and key in `/root/.restic_b2account`, one line for ID and key each
-2. Create a file with encyption password in `/root/.restic_password`, with permissions `600`
+1. Create a file with Backblaze account ID and key in `/root/.restic_b2account`, in the following format:
+    ```
+    export B2_ACCOUNT_ID="012345678910"
+    export B2_ACCOUNT_KEY="qwertyasdfhzxcvnnbvczhgfdaytreq"
+    ```
+   Note that this will be sourced into the backup script, so it must be valid bash syntax.
+2. Create a file with encyption password in plaintext in `/root/.restic_password`, with permissions `600`. 
 
 The script `initalize_restic_b2_repo.sh` initalizes the Backblaze B2 bucket as
 a Restic repo according to the instructions in the [Restic
