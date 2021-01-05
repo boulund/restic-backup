@@ -16,6 +16,10 @@ credentials from the file and export them as environment variables for Restic.
 Restic reads the repo password from the file using the `--password-file`
 argument, so it must contain nothing else.
 
+A small file, `common.sh`, contains configurable settings such as paths to
+secret files, repo string, etc. This file is sourced by the init and backup
+scripts.
+
 NOTE: Running Restic as root is not recommended. Read the example in the [Restic
 docs](https://restic.readthedocs.io/en/stable/080_examples.html#backing-up-your-system-without-running-restic-as-root)
 for a way to run Restic as a separate system user instead.

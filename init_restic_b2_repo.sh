@@ -4,15 +4,12 @@
 
 set -eou pipefail
 
-restic_repo="b2:boulund-monolith-restic:restic"
+# Find path to script, to reliably be able to source 'common.sh'
+# https://stackoverflow.com/questions/192292/how-best-to-include-other-scripts
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 
-password_file="/root/.restic_password"
-
-# Source B2_ACCOUNT_ID and B2_ACCOUNT_KEY from secret config file
-source /root/.restic_b2account
-
-
-restic_call="restic --repo ${restic_repo} --password-file ${password_file}"
+source ${DIR}/common.sh
 
 
 if ${restic_call} snapshots ; then
