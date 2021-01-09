@@ -10,5 +10,5 @@ password_file="/root/.restic_password"
 # Source B2_ACCOUNT_ID and B2_ACCOUNT_KEY from secret config file
 source /root/.restic_b2account
 
-restic_call="restic --repo ${restic_repo} --password-file ${password_file}"
+restic_call="/usr/local/bin/restic --repo ${restic_repo} --password-file ${password_file}"
 
