@@ -64,6 +64,11 @@ repo already exists, so it should be idempotent and safe to accidentally run
 again.
 
 
+## Automate backups
+A small cronscript is included in the repo: `restic.cron`. Place a copy of this
+in `/etc/cron.d/restic` (note the filename, it must not have an extension).
+
+
 # Summary of deployment procedure
 1. Install Restic
 2. Clone repo to server, `git clone git@github.com:boulund/monolith-restic /root/monolith-restic`
@@ -72,7 +77,7 @@ again.
 
 Either execute `init_restic_b2_repo.sh` if you haven't already or try to
 execute `restic_backup.sh`.  If everything seems to be working as intended,
-install the cronjob by copying `restic.cron` to `/etc/cron.d/restic.cron`.
+install the cronjob by copying `restic.cron` to `/etc/cron.d/restic`.
 
 
 # Restoring files
