@@ -87,3 +87,17 @@ For more info on how to restore files, refer to the official docs:
 https://restic.readthedocs.io/en/stable/050_restore.html
 
 
+# Running arbitrary Restic commands
+The script `restic.sh` can be used to simplify running arbitrary restic
+commands against the preconfigured B2 repo. It reads the Backblaze B2 repo configuration and associated password from the same configuration files as the other scripts in this repo. Usage is easy, e.g.:
+
+List all existing snapshots:
+```
+./restic.sh snaphots
+```
+
+The snapshot hashes listed can be used to see which files were included in the last backup by comparing the two last snaphots with the `diff` command:
+```
+./restic.sh diff HASH1 HASH2
+```
+
