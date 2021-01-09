@@ -22,6 +22,6 @@ ${restic_call} backup \
   /root \
   /store \
   --exclude /store/downloads \
-  2>&1 | tee --append /var/log/restic.log
+  2>&1 | tee --append ${logfile}
 
 echo "$(date) Restic backup completed." >> ${logfile}
