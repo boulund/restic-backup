@@ -1,5 +1,5 @@
 # restic-backup
-Restic backup wrapper configuration for Linux.
+[Restic](https://restic.net/) backup wrapper configuration for Linux.
 
 ## Overview 
 This configuration runs Restic to backup data from a Linux server, tested on
