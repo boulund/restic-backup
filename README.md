@@ -1,20 +1,20 @@
-# monolith-restic
-Restic backup configuration for Monolith.
+# restic-backup
+Restic backup wrapper configuration for Linux.
 
 ## Overview 
-This configuration runs Restic to backup data from Monolith, a Linux server
-running Debian, to a backup respository stored on Backblaze B2. Private
-parameters are stored in a local file on the server, with user permissons only
-for the root user. The required parameters are:
+This configuration runs Restic to backup data from a Linux server, tested on
+Debian, to a backup respository stored on Backblaze B2. Private parameters are
+stored in local files on the server, with user permissons only for the root
+user. The required parameters are:
 
 * `B2_ACCOUNT_ID` - Backblaze App Key ID
 * `B2_ACCOUNT_KEY` - Backblaze App Key 
 * `RESTIC_REPO_PASSWORD` - Password used to initalize Restic repo
 
-The shell script that runs Restic to perform the backup will read the Backblaze
-credentials from the file and export them as environment variables for Restic.
+The shell script that runs Restic to perform the backup will read Backblaze
+credentials from a file and export them as environment variables for Restic.
 Restic reads the repo password from the file using the `--password-file`
-argument, so it must contain nothing else.
+argument, so the password must be in its own file and contain nothing else.
 
 A small file, `common.sh`, contains configurable settings such as paths to
 secret files, repo string, etc. This file is sourced by the init and backup
@@ -39,7 +39,7 @@ mv restic /usr/local/bin/
 Verify that it works by running `restic version`:
 
 ```
-root@monolith:~# restic version
+# restic version
 restic 0.11.0 compiled with go1.15.3 on linux/amd64
 ```
 
@@ -49,9 +49,9 @@ restic 0.11.0 compiled with go1.15.3 on linux/amd64
     export B2_ACCOUNT_ID="012345678910"
     export B2_ACCOUNT_KEY="qwertyasdfhzxcvnnbvczhgfdaytreq"
     ```
-   Note that this will be sourced into the backup script, so it must be valid
-   bash syntax. Set permissions to `600` to ensure no other users can read the
-   file contents.
+   Note that this will be sourced by bash into the backup script, so it must be
+   valid bash syntax. Set permissions to `600` to ensure no other users can read
+   the file contents.
 2. Create a file with encyption password in plaintext in
    `/root/.restic_password`, with permissions `600`. 
 
@@ -61,17 +61,18 @@ docs](https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html#back
 It reads application keys and Restic repo password from the configuration files
 created in the two steps above. The init script makes a quick check to see if a
 repo already exists, so it should be idempotent and safe to accidentally run
-again.
+again. Double check the settings in `common.sh` before running the initalization
+script.
 
 
 ## Automate backups
 A small cronscript is included in the repo: `restic.cron`. Place a copy of this
-in `/etc/cron.d/restic` (note the filename, it must not have an extension).
+in `/etc/cron.d/restic` (note the filename: it must not have an extension).
 
 
 # Summary of deployment procedure
 1. Install Restic
-2. Clone repo to server, `git clone git@github.com:boulund/monolith-restic /root/monolith-restic`
+2. Clone repo to server, `git clone git@github.com:boulund/restic-backup /root/restic-backup`
 3. Create a file with Backblaze account ID and key in `/root/.restic_b2account`, with permissions `600`
 4. Create a file with encyption password in `/root/.restic_password`, with permissions `600`
 
@@ -88,15 +89,18 @@ https://restic.readthedocs.io/en/stable/050_restore.html
 
 
 # Running arbitrary Restic commands
-The script `restic.sh` can be used to simplify running arbitrary restic
-commands against the preconfigured B2 repo. It reads the Backblaze B2 repo configuration and associated password from the same configuration files as the other scripts in this repo. Usage is easy, e.g.:
+`restic.sh` can be used to simplify running arbitrary restic commands against
+the preconfigured B2 repo. It reads the Backblaze B2 repo configuration and
+associated password from the same configuration files as the other scripts in
+this repo. Usage is easy, e.g.:
 
 List all existing snapshots:
 ```
 ./restic.sh snaphots
 ```
 
-The snapshot hashes listed can be used to see which files were included in the last backup by comparing the two last snaphots with the `diff` command:
+The snapshot hashes listed can be used to see which files were included in the
+last backup by comparing the two last snaphots with the `diff` command:
 ```
 ./restic.sh diff HASH1 HASH2
 ```

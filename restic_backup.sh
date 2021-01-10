@@ -1,5 +1,5 @@
 #!/bin/bash
-# Backup script for Monolith using Restic to backup to Backblaze B2
+# Backup script using Restic to backup to Backblaze B2
 # Fredrik Boulund 2021
 
 set -eou pipefail
