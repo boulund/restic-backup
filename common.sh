@@ -4,11 +4,11 @@
 
 set -eou pipefail
 
-restic_repo="b2:boulund-monolith-restic:restic"
+# Path to file containing repo password
 password_file="/root/.restic_password"
 
-# Source B2_ACCOUNT_ID and B2_ACCOUNT_KEY from secret config file
+# Source RESTIC_REPOSITORY, B2_ACCOUNT_ID and B2_ACCOUNT_KEY from secret config file
 source /root/.restic_b2account
 
-restic_call="/usr/local/bin/restic --repo ${restic_repo} --password-file ${password_file}"
+restic_call="/usr/local/bin/restic --password-file ${password_file}"
 

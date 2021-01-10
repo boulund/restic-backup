@@ -7,18 +7,20 @@ Debian, to a backup respository stored on Backblaze B2. Private parameters are
 stored in local files on the server, with user permissons only for the root
 user. The required parameters are:
 
+* `RESTIC_REPOSITORY` - The remote repository restic should connect to
 * `B2_ACCOUNT_ID` - Backblaze App Key ID
 * `B2_ACCOUNT_KEY` - Backblaze App Key 
-* `RESTIC_REPO_PASSWORD` - Password used to initalize Restic repo
+* Password used to initalize Restic repo, stored in a separate file.
 
-The shell script that runs Restic to perform the backup will read Backblaze
-credentials from a file and export them as environment variables for Restic.
-Restic reads the repo password from the file using the `--password-file`
-argument, so the password must be in its own file and contain nothing else.
+The shell script that runs Restic to perform the backup will read the
+`RESTIC_REPOSITORY` varible and Backblaze credentials from a file and export
+them as environment variables for Restic.  Restic reads the repo password from
+the file using the `--password-file` argument, so the password must be in its
+own file and contain nothing else.
 
 A small file, `common.sh`, contains configurable settings such as paths to
-secret files, repo string, etc. This file is sourced by the init and backup
-scripts.
+secret files, and which local paths that should be included and excluded from
+the backup, etc. This file is sourced by the init and backup scripts.
 
 NOTE: Running Restic as root is not recommended. Read the example in the [Restic
 docs](https://restic.readthedocs.io/en/stable/080_examples.html#backing-up-your-system-without-running-restic-as-root)
@@ -46,6 +48,7 @@ restic 0.11.0 compiled with go1.15.3 on linux/amd64
 ### Secure the required credentials
 1. Create a file with Backblaze account ID and key in `/root/.restic_b2account`, in the following format:
     ```
+    export RESTIC_REPOSITORY="b2:bucketname:dirname"
     export B2_ACCOUNT_ID="012345678910"
     export B2_ACCOUNT_KEY="qwertyasdfhzxcvnnbvczhgfdaytreq"
     ```
@@ -55,14 +58,14 @@ restic 0.11.0 compiled with go1.15.3 on linux/amd64
 2. Create a file with encyption password in plaintext in
    `/root/.restic_password`, with permissions `600`. 
 
-The script `initalize_restic_b2_repo.sh` initalizes the Backblaze B2 bucket as
-a Restic repo according to the instructions in the [Restic
+`initalize_restic_b2_repo.sh` initalizes the Backblaze B2 bucket as a Restic
+repo according to the instructions in the [Restic
 docs](https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html#backblaze-b2).
 It reads application keys and Restic repo password from the configuration files
 created in the two steps above. The init script makes a quick check to see if a
 repo already exists, so it should be idempotent and safe to accidentally run
-again. Double check the settings in `common.sh` before running the initalization
-script.
+again. Double check the settings in `common.sh` before running the
+initalization script.
 
 
 ## Automate backups
@@ -73,7 +76,8 @@ in `/etc/cron.d/restic` (note the filename: it must not have an extension).
 # Summary of deployment procedure
 1. Install Restic
 2. Clone repo to server, `git clone git@github.com:boulund/restic-backup /root/restic-backup`
-3. Create a file with Backblaze account ID and key in `/root/.restic_b2account`, with permissions `600`
+3. Create a file with Restic repo string , Backblaze account ID and key in
+   `/root/.restic_b2account`, with permissions `600`
 4. Create a file with encyption password in `/root/.restic_password`, with permissions `600`
 
 Either execute `init_restic_b2_repo.sh` if you haven't already or try to
